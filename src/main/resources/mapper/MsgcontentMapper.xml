@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bokcc.vhrserver.mapper.MsgcontentMapper">
+<mapper namespace="club.bokcc.vhrserver.mapper.MsgcontentMapper">
 
-    <resultMap id="BaseResultMap" type="com.bokcc.vhrserver.model.Msgcontent">
+    <resultMap id="BaseResultMap" type="club.bokcc.vhrserver.model.Msgcontent">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="title" column="title" jdbcType="VARCHAR"/>
             <result property="message" column="message" jdbcType="VARCHAR"/>
