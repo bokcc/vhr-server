@@ -34,3 +34,7 @@ build/
 
 ### mvn ###
 .mvn
+
+
+### http ###
+src/main/resources/http/

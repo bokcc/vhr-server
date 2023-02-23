@@ -1,5 +1,9 @@
 package club.bokcc.vhrserver.mapper;
 
+import club.bokcc.vhrserver.model.Menu;
+
+import java.util.List;
+
 /**
 * @author xiaowang
 * @description 针对表【menu】的数据库操作Mapper
@@ -8,6 +12,7 @@ package club.bokcc.vhrserver.mapper;
 */
 public interface MenuMapper {
 
+    List<Menu> getMenusByHrId(Integer id);
 }
 
 

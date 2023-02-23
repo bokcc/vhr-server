@@ -5,16 +5,19 @@
 <mapper namespace="club.bokcc.vhrserver.mapper.MenuMapper">
 
     <resultMap id="BaseResultMap" type="club.bokcc.vhrserver.model.Menu">
-            <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="url" column="url" jdbcType="VARCHAR"/>
-            <result property="path" column="path" jdbcType="VARCHAR"/>
-            <result property="component" column="component" jdbcType="VARCHAR"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="iconcls" column="iconCls" jdbcType="VARCHAR"/>
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="url" column="url" jdbcType="VARCHAR"/>
+        <result property="path" column="path" jdbcType="VARCHAR"/>
+        <result property="component" column="component" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="iconCls" column="iconCls" jdbcType="VARCHAR"/>
+
+        <result property="parentId" column="parentId" jdbcType="INTEGER"/>
+        <result property="enabled" column="enabled" jdbcType="TINYINT"/>
+        <association property="meta" javaType="club.bokcc.vhrserver.model.Meta">
             <result property="keepalive" column="keepAlive" jdbcType="TINYINT"/>
-            <result property="requireauth" column="requireAuth" jdbcType="TINYINT"/>
-            <result property="parentid" column="parentId" jdbcType="INTEGER"/>
-            <result property="enabled" column="enabled" jdbcType="TINYINT"/>
+            <result property="requireAuth" column="requireAuth" jdbcType="TINYINT"/>
+        </association>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -23,4 +26,42 @@
         keepAlive,requireAuth,parentId,
         enabled
     </sql>
+    <resultMap id="Menu2" type="club.bokcc.vhrserver.model.Menu" extends="BaseResultMap">
+        <collection property="children" ofType="club.bokcc.vhrserver.model.Menu">
+            <id property="id" column="id2" jdbcType="INTEGER"/>
+            <result property="url" column="url2" jdbcType="VARCHAR"/>
+            <result property="path" column="path2" jdbcType="VARCHAR"/>
+            <result property="component" column="component2" jdbcType="VARCHAR"/>
+            <result property="name" column="name2" jdbcType="VARCHAR"/>
+            <result property="iconCls" column="iconCls2" jdbcType="VARCHAR"/>
+
+            <result property="parentId" column="parentId2" jdbcType="INTEGER"/>
+            <result property="enabled" column="enabled2" jdbcType="TINYINT"/>
+            <association property="meta" javaType="club.bokcc.vhrserver.model.Meta">
+                <result property="keepalive" column="keepAlive2" jdbcType="TINYINT"/>
+                <result property="requireAuth" column="requireAuth2" jdbcType="TINYINT"/>
+            </association>
+        </collection>
+    </resultMap>
+    <select id="getMenusByHrId" resultMap="Menu2">
+        select distinct m1.*,
+                        m2.id          as id2,
+                        m2.path        as path2,
+                        m2.component   as component2,
+                        m2.name        as name2,
+                        m2.iconCls     as iconCls2,
+                        m2.keepAlive   as keepAlive2,
+                        m2.requireAuth as requireAuth2,
+                        m2.enabled     as enabled2
+        from menu as m1,
+             menu as m2,
+             hr_role as hrr,
+             menu_role as mr
+        where hrr.hrid = #{id}
+          and mr.rid = hrr.rid
+          and m2.id = mr.mid
+          and m1.id = m2.parentId
+          and m2.enabled = true
+        order by m1.id, m2.id;
+    </select>
 </mapper>
